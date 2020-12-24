@@ -107,3 +107,4 @@ getGenMix <- function() {
 
   return(head(gendf, length(unique(gendf$variable))))
 }
+

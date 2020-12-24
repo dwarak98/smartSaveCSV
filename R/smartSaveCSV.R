@@ -19,13 +19,14 @@ createBlankCSV <- function(name){
 
 
 
-smartSaveCSV <- function(df,csvfile) {
+smartSaveCSV <- function(df,csvfile,distinctcols) {
   existingdf <- read.csv(path)
   existingdf[[dateColName]] <- ymd_hms(existingdf[[dateColName]])
   existingdf$ModifiedAt <- ymd_hms(existingdf$ModifiedAt)
-  rbind(existingdf,df) %>%
-    arrange(desc(ModifiedAt)) %>%
-    distinct(Interval,variable, .keep_all = TRUE) %>%
+  newdf <- rbind(existingdf,df) %>%
+    arrange(desc(ModifiedAt))
+
+ df2 <- newdf[!duplicated(newdf[,distinctcols]),] %>%
     write.csv(path,row.names = FALSE)
 
 }
@@ -48,8 +49,8 @@ if(day_of_the_month ==1){
   createBlankCSV(path)
   write.csv(df,path,row.names = FALSE)
 }
-rm(list = c("combine_df_Columns", "format_DateTime", "getForecastVsActual", "getGenMix"))
+# rm(list = c("combine_df_Columns", "format_DateTime", "getForecastVsActual", "getGenMix"))
 
 
-smartSaveCSV(df,path)
+smartSaveCSV(df,path,c("Interval","variable"))
 
