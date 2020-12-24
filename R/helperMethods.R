@@ -1,3 +1,4 @@
+# Sys.setenv("R_TESTS" = "")
 library(shinydashboard)
 library(shiny)
 library(stringr)
@@ -11,9 +12,6 @@ library(lubridate)
 library(RCurl)
 require(plotly)
 library(tidyr)
-library('ggplot2')
-library('forecast')
-library('tseries')
 
 
 ###################### Date Time Formatting #########################################
@@ -26,7 +24,7 @@ format_DateTime <- function(df, dateColName, format) {
   else if (format == "mdy_hms") {
     df[[dateColName]] <- mdy_hms(df[[dateColName]], tz = Sys.timezone())
   }
-  
+
   df$Hour <- hour(df[[dateColName]])
   return(df)
 }
@@ -61,12 +59,12 @@ combine_df_Columns <- function(df, resultColName, colNames) {
       df[[resultColName]] <- df[[resultColName]] + df[[colName]]
     }
     i = i + 1
-    
+
   }
-  
+
   return(df)
-  
-  
+
+
 }
 
 
@@ -79,10 +77,10 @@ getGenMix <- function() {
       ssl.verifyhost = FALSE,
       ssl.verifypeer = FALSE
     )
-  
+
   gendf      <- read.csv(textConnection(myfile), header = T)
   gendf <- format_DateTime(gendf, "GMT.MKT.Interval", "ymd_hms")
-  
+
   gendf <- gendf %>%
     combine_df_Columns("Coal", c("Coal.Market", "Coal.Self")) %>%
     combine_df_Columns("Nuclear", c("Nuclear.Market", "Nuclear.Self")) %>%
@@ -104,8 +102,8 @@ getGenMix <- function() {
     setDT() %>%
     melt(id = c("GMT.MKT.Interval", "Hour")) %>%
     arrange(desc(GMT.MKT.Interval))
-  
+
   # print(head(gendf,length(unique(gendf$variable))))
-  
+
   return(head(gendf, length(unique(gendf$variable))))
 }
