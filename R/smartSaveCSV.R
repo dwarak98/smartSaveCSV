@@ -19,10 +19,13 @@ createBlankCSV <- function(name){
 
 
 
-smartSaveCSV <- function(df,csvfile,distinctcols) {
+smartSaveCSV <- function(df,csvfile,valuecol) {
   existingdf <- read.csv(path)
   existingdf[[dateColName]] <- ymd_hms(existingdf[[dateColName]])
   existingdf$ModifiedAt <- ymd_hms(existingdf$ModifiedAt)
+  colheader<- colnames(df)
+  colheader <- colheader[!colheader %in% valuecol]
+
   newdf <- rbind(existingdf,df) %>%
     arrange(desc(ModifiedAt))
 
@@ -52,5 +55,5 @@ if(day_of_the_month ==1){
 # rm(list = c("combine_df_Columns", "format_DateTime", "getForecastVsActual", "getGenMix"))
 
 
-smartSaveCSV(df,path,c("Interval","variable"))
+smartSaveCSV(df,path,"value")
 
