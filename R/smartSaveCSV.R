@@ -2,9 +2,12 @@
 source("R/helperMethods.R")
 library(lubridate)
 
+#' @export smartSaveCSV
+#' @import lubridate
+#' @importFrom utils read.csv write.csv
 
 getWindPenetration <- function(df) {
-  df %>% filter(variable %in% c("wind_pen_actual", "wind_pen_STF", "wind_pen_MTF"))
+  df %>% dplyr::filter(variable %in% c("wind_pen_actual", "wind_pen_STF", "wind_pen_MTF"))
 
 
 }
@@ -13,6 +16,8 @@ createBlankCSV <- function(name){
   file.create(name)
 
 }
+
+
 
 smartSaveCSV <- function(df,csvfile) {
   existingdf <- read.csv(path)
@@ -37,12 +42,13 @@ month_year <- format(as.Date(Sys.Date()), "%m_%Y")
 name <- paste("Wpen_Forecast_Vs_Actual_",month_year,".csv",sep="")
 
 day_of_the_month <- format(as.Date(Sys.Date()), "%d")
-path <- paste("R/Data/",name,sep="")
+path <- paste("Data/",name,sep="")
 if(day_of_the_month ==1){
 
   createBlankCSV(path)
   write.csv(df,path,row.names = FALSE)
 }
+rm(list = c("combine_df_Columns", "format_DateTime", "getForecastVsActual", "getGenMix"))
 
 
 smartSaveCSV(df,path)
