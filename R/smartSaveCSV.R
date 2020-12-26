@@ -1,9 +1,8 @@
 
-#' @export smartSaveCSV
 #' @import lubridate
 #' @importFrom utils read.csv write.csv
 library(lubridate)
-
+ #' @export
 smartSaveCSV <- function(df, path, valuecol) {
   existingdf <- read.csv(path)
   existingdf[[dateColName]] <- ymd_hms(existingdf[[dateColName]])
