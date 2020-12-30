@@ -21,17 +21,15 @@ library(lubridate)
 library(pracma)
 #' @export
 smartSaveCSV <- function(latestdf, existingdf, pathToSave, valuecol) {
-
   colheader1 <- colnames(latestdf)
   colheader2 <- colnames(existingdf)
-  for (col in colheader1){
-
-    if(strcmpi(class(latestdf[[col]])[1],class(existingdf[[col]])[1])==FALSE && (strcmp(class(latestdf[[col]])[1],"POSIXct")==TRUE || strcmp(class(existingdf[[col]])[1],"POSIXct")==TRUE)){
-      stop(paste(col," class does not match between existing df and the latest df"),sep=" ")
+  for (col in colheader1) {
+    if (strcmpi(class(latestdf[[col]])[1], class(existingdf[[col]])[1]) == FALSE && (strcmp(class(latestdf[[col]])[1], "POSIXct") == TRUE || strcmp(class(existingdf[[col]])[1], "POSIXct") == TRUE)) {
+      stop(paste(col, " class does not match between existing df and the latest df"), sep = " ")
     }
 
-    if(strcmpi(class(latestdf[[col]])[1],class(existingdf[[col]])[1])==FALSE){
-      warning(paste(col," class does not match between existing df and the latest df"),sep=" ")
+    if (strcmpi(class(latestdf[[col]])[1], class(existingdf[[col]])[1]) == FALSE) {
+      warning(paste(col, " class does not match between existing df and the latest df"), sep = " ")
     }
   }
 
@@ -52,4 +50,36 @@ smartSaveCSV <- function(latestdf, existingdf, pathToSave, valuecol) {
 
   appendedDF[!duplicated(appendedDF[, colheader]), ] %>%
     write.csv(pathToSave, row.names = FALSE)
+}
+
+#' @export
+smartAppend <- function(latestdf, existingdf, valuecol) {
+  colheader1 <- colnames(latestdf)
+  colheader2 <- colnames(existingdf)
+  for (col in colheader1) {
+    if (strcmpi(class(latestdf[[col]])[1], class(existingdf[[col]])[1]) == FALSE && (strcmp(class(latestdf[[col]])[1], "POSIXct") == TRUE || strcmp(class(existingdf[[col]])[1], "POSIXct") == TRUE)) {
+      stop(paste(col, " class does not match between existing df and the latest df"), sep = " ")
+    }
+
+    if (strcmpi(class(latestdf[[col]])[1], class(existingdf[[col]])[1]) == FALSE) {
+      warning(paste(col, " class does not match between existing df and the latest df"), sep = " ")
+    }
+  }
+
+
+  latestdf$ModifiedAtColumn <- Sys.time()
+  latestdf$ModifiedAtColumn <- ymd_hms(latestdf$ModifiedAtColumn)
+  existingdf$ModifiedAtColumn <- Sys.time() - 3600
+  existingdf$ModifiedAtColumn <- ymd_hms(existingdf$ModifiedAtColumn)
+
+
+  appendedDF <- rbind(existingdf, latestdf) %>%
+    arrange(desc(ModifiedAtColumn))
+
+  drops <- c("ModifiedAtColumn")
+  appendedDF <- appendedDF[, !(names(appendedDF) %in% drops)]
+  colheader <- colnames(appendedDF)
+  colheader <- colheader[!colheader %in% valuecol]
+
+  return(appendedDF[!duplicated(appendedDF[, colheader]), ])
 }
