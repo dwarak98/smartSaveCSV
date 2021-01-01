@@ -3,15 +3,6 @@
 \name{smartSaveCSV}
 \alias{smartSaveCSV}
 \title{Append two datasets and contains the latest information}
-\format{
-A data frame with columns:
-\describe{
-\item{Year}{A value between 1924 and 2015.}
-\item{Syrup}{Maple products expressed as syrup, total in thousands of gallons.}
-\item{CAD}{Gross value of maple products in thousands of Canadian dollars.}
-\item{Region}{Postal code abbreviation for territory or province.}
-}
-}
 \arguments{
 \item{latestdf}{Latest Dataframe whose contents should not be removed when removing duplicates from
 the appended dataframe}
