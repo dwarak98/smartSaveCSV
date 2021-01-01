@@ -2,7 +2,7 @@
 % Please edit documentation in R/smartSaveCSV.R
 \name{smartSaveCSV}
 \alias{smartSaveCSV}
-\title{Production and farm value of maple products in Canada}
+\title{Append two datasets and contains the latest information}
 \format{
 A data frame with columns:
 \describe{
@@ -12,15 +12,30 @@ A data frame with columns:
 \item{Region}{Postal code abbreviation for territory or province.}
 }
 }
-\source{
-Statistics Canada. Table 001-0008 - Production and farm value of
-maple products, annual. \url{http://www5.statcan.gc.ca/cansim/}
-}
 \arguments{
-\item{df}{This is a Data Frame}
+\item{latestdf}{Latest Dataframe whose contents should not be removed when removing duplicates from
+the appended dataframe}
 
-\item{path}{This is the path to the CSV file}
+\item{existingdf}{Old Dataframe whose contents might be removed if duplicates are found after appending
+the two dataframes.}
+
+\item{pathToSave}{This is the path+Name to save the csv file. Acceptable formats should end with .csv
+extension}
+
+\item{valuecol}{This parameter is used when removing duplicate rows in the appended dataframe.
+Typically, we want to leave the columns mentioned in this parameter and then remove duplicate rows
+from rest of the columns. Acceptable formats: c("value","variable","Amount")}
+}
+\value{
+smartAppend function returns a combined dataframe after removing duplicated rows.
 }
 \description{
-Production and farm value of maple products in Canada
+This package exports out two functions. the smartAppend() function returns a dataframe which
+appends two other dataframes (latestdf, existingdf) and also removes duplicates based on value
+column. The smartSaveCSV() function saves the appended dataframe in a csv file.
+}
+\note{
+These two functions checks for the similarities in column datatype. The function
+returns an error if any datetime column or date column has incorrect formats. Also, the function
+throws a warning when there is differences in classes of columns in two dataframes.
 }
